@@ -1,12 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { environment } from './environment/environment';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const config = new DocumentBuilder()
-    .setTitle('Bootcamp LIGA')
+    .setTitle(environment.SWAGGER_TITLE)
     .setDescription('A API do Post-it')
     .setVersion('1.0')
     .build();
