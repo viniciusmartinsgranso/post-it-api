@@ -1,5 +1,5 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsNumber, IsOptional, IsPositive, IsString, MinLength } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsOptional, IsString, IsUrl, MinLength } from 'class-validator';
 
 export class UpdateUserPayload {
   @ApiPropertyOptional()
@@ -8,9 +8,14 @@ export class UpdateUserPayload {
   @MinLength(2, { message: 'O nome deve ter no mínimo dois caracteres' })
   name: string;
 
-  @ApiPropertyOptional()
+  @ApiProperty()
   @IsOptional()
-  @IsNumber({ maxDecimalPlaces: 0 }, { message: 'A idade deve ser um número' })
-  @IsPositive({ message: 'A idade deve ser um número maior que 0' })
-  age: number;
+  @IsString()
+  public role?: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  @IsUrl({}, { message: 'A imagem deve ser uma url' })
+  public imageUrl?: string;
 }

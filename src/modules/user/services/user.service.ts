@@ -1,56 +1,75 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateUserPayload } from "../models/create-user.payload";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from '@nestjs/typeorm';
+import { Like, Repository } from 'typeorm';
+import { UserEntity } from '../entities/user.entity';
+import { CreateUserPayload } from '../models/create-user.payload';
 import { UpdateUserPayload } from '../models/update-user.payload';
-import { UserProxy } from '../models/user.proxy';
 
 @Injectable()
 export class UserService {
-  public listUsers: UserProxy[] = [];
+  constructor(
+    @InjectRepository(UserEntity)
+    private readonly repository: Repository<UserEntity>,
+  ) {}
 
-  public getUsers(): UserProxy[] {
-    return this.listUsers;
+  public async getUsers(search: string): Promise<UserEntity[]> {
+    const users = await this.repository.find({
+      order: {
+        name: 'ASC',
+      },
+      where: search ? { name: Like('%' + search + '%'), } : { },
+    });
+
+    return users;
   }
 
-  public getUserById(userId: string): UserProxy {
-    const user = this.listUsers.find((user) => user.id === +userId);
+  public async getUserById(userId: string): Promise<UserEntity> {
+    const user = await this.repository.findOneBy({ id: +userId });
 
-    if (!user) throw new NotFoundException('Usuário não existe');
+    if (!user) throw new NotFoundException('O usuário não foi encontrado');
 
     return user;
   }
 
-  public postUser(user: CreateUserPayload): CreateUserPayload {
-    this.listUsers.push(user);
-    return user;
+  public async postUser(payload: CreateUserPayload): Promise<UserEntity> {
+    const existingUser = await this.repository.findOneBy({
+      email: payload.email,
+    });
+
+    if (existingUser)
+      throw new BadRequestException('Já existe um usuário com esse email');
+
+    const user = new UserEntity();
+
+    user.name = payload.name;
+    user.email = payload.email;
+    user.password = payload.password;
+    user.role = payload.role;
+    user.imageUrl = payload.imageUrl;
+
+    return await this.repository.save(user);
   }
 
-  public putUser(userId: string, user: UpdateUserPayload): UserProxy {
-    const index = this.listUsers.findIndex((user) => user.id === +userId);
-
-    if (index === -1) throw new NotFoundException('Usuário não existe.');
-
-    this.listUsers[index] = this.getProxyFromPayload(
-      user,
-      this.listUsers[index],
-    );
-
-    return this.listUsers[index];
-  }
-
-  public deleteUser(userId: string): void {
-    this.listUsers = this.listUsers.filter((user) => user.id !== +userId);
-    console.log(this.listUsers);
-  }
-
-  private getProxyFromPayload(
+  public async putUser(
+    userId: string,
     payload: UpdateUserPayload,
-    proxy: UserProxy,
-  ): UserProxy {
-    return new UserProxy(
-      proxy.id,
-      payload.name || proxy.name,
-      payload.age || proxy.age,
-      proxy.isGraduate,
-    );
+  ): Promise<UserEntity> {
+    const user = await this.repository.findOneBy({ id: +userId });
+
+    if (!user) throw new NotFoundException('O usuário não foi encontrado');
+
+    user.name = payload.name ?? user.name;
+    user.role = payload.role ?? user.role;
+    user.imageUrl = payload.imageUrl ?? user.imageUrl;
+
+    return await this.repository.save(user);
+  }
+
+  public async deleteUser(userId: string): Promise<void> {
+    const user = await this.repository.findOneBy({ id: +userId });
+
+    if (!user) throw new NotFoundException('O usuário não foi encontrado');
+
+    await this.repository.remove(user);
   }
 }
