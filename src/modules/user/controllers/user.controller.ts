@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
 import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from "@nestjs/swagger";
+import { ProtectTo } from "../../../decorators/protect/protect.decorator";
 import { CreateUserPayload } from '../models/create-user.payload';
 import { UpdateUserPayload } from '../models/update-user.payload';
 import { UserProxy } from '../models/user.proxy';
@@ -12,6 +13,7 @@ export class UserController {
     private readonly userService: UserService,
   ) {}
 
+  @ProtectTo()
   @Get('/list')
   @ApiOperation({ summary: 'Obtém os dados de todos os usuários' })
   @ApiOkResponse({ type: UserProxy, isArray: true })
@@ -20,13 +22,14 @@ export class UserController {
     return this.userService.getUsers(search).then(result => result.map(entity => new UserProxy(entity)));
   }
 
+  @ProtectTo()
   @Get(':userId')
   @ApiOperation({ summary: 'Obtém um usuário pela identificação' })
   @ApiOkResponse({ type: UserProxy })
   @ApiParam({ name: 'userId', description: 'A identificação do usuário' })
   public getOneUser(@Param('userId') userId: string): Promise<UserProxy> {
     return this.userService
-      .getUserById(userId)
+      .getUserById(+userId)
       .then((entity) => new UserProxy(entity));
   }
 
@@ -40,6 +43,7 @@ export class UserController {
       .then((entity) => new UserProxy(entity));
   }
 
+  @ProtectTo()
   @Put(':userId')
   @ApiOperation({ summary: 'Atualiza um usuário' })
   @ApiOkResponse({ type: UserProxy })

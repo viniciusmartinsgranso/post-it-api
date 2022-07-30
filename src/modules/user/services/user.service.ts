@@ -4,6 +4,7 @@ import { Like, Repository } from 'typeorm';
 import { UserEntity } from '../entities/user.entity';
 import { CreateUserPayload } from '../models/create-user.payload';
 import { UpdateUserPayload } from '../models/update-user.payload';
+import * as bcryptjs from 'bcryptjs';
 
 @Injectable()
 export class UserService {
@@ -11,6 +12,10 @@ export class UserService {
     @InjectRepository(UserEntity)
     private readonly repository: Repository<UserEntity>,
   ) {}
+
+  public getRepository(): Repository<UserEntity> {
+    return this.repository;
+  }
 
   public async getUsers(search: string): Promise<UserEntity[]> {
     const users = await this.repository.find({
@@ -23,8 +28,8 @@ export class UserService {
     return users;
   }
 
-  public async getUserById(userId: string): Promise<UserEntity> {
-    const user = await this.repository.findOneBy({ id: +userId });
+  public async getUserById(userId: number): Promise<UserEntity> {
+    const user = await this.repository.findOneBy({ id: userId });
 
     if (!user) throw new NotFoundException('O usuário não foi encontrado');
 
@@ -41,9 +46,11 @@ export class UserService {
 
     const user = new UserEntity();
 
+    const passwordSalt = bcryptjs.getSalt(payload.password);
+
     user.name = payload.name;
     user.email = payload.email;
-    user.password = payload.password;
+    user.password = await bcryptjs.hash(payload.password, passwordSalt);
     user.role = payload.role;
     user.imageUrl = payload.imageUrl;
 
