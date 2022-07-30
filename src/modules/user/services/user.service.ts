@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { UserPayload } from '../models/user.payload';
+import { CreateUserPayload } from "../models/create-user.payload";
+import { UpdateUserPayload } from '../models/update-user.payload';
 import { UserProxy } from '../models/user.proxy';
 
 @Injectable()
@@ -18,12 +19,12 @@ export class UserService {
     return user;
   }
 
-  public postUser(user: UserProxy): UserProxy {
+  public postUser(user: CreateUserPayload): CreateUserPayload {
     this.listUsers.push(user);
     return user;
   }
 
-  public putUser(userId: string, user: UserPayload): UserProxy {
+  public putUser(userId: string, user: UpdateUserPayload): UserProxy {
     const index = this.listUsers.findIndex((user) => user.id === +userId);
 
     if (index === -1) throw new NotFoundException('Usuário não existe.');
@@ -42,7 +43,7 @@ export class UserService {
   }
 
   private getProxyFromPayload(
-    payload: UserPayload,
+    payload: UpdateUserPayload,
     proxy: UserProxy,
   ): UserProxy {
     return new UserProxy(
