@@ -5,12 +5,7 @@ import { UserController } from './modules/user/user.controller';
 
 @Module({
   imports: [],
-  controllers: [
-    AppController,
-    UserController,
-  ],
-  providers: [
-    AppService
-  ],
+  controllers: [AppController, UserController],
+  providers: [AppService],
 })
 export class AppModule {}
