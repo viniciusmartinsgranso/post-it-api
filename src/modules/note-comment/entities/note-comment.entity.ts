@@ -1,6 +1,6 @@
-import { NoteEntity } from "src/modules/note/entities/note.entity";
-import { UserEntity } from "src/modules/user/entities/user.entity";
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { NoteEntity } from 'src/modules/note/entities/note.entity';
+import { UserEntity } from 'src/modules/user/entities/user.entity';
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('notes_comments')
 export class NoteCommentEntity {
@@ -23,7 +23,8 @@ export class NoteCommentEntity {
   @ManyToOne(() => UserEntity)
   public user?: UserEntity;
 
-  @ManyToOne(() => NoteEntity)
+  @ManyToOne(() => NoteEntity, (entity) => entity.comments, {
+    onDelete: 'CASCADE',
+  })
   public note?: NoteEntity;
-
 }

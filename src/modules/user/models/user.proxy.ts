@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { UserEntity } from '../entities/user.entity';
 
 export class UserProxy {
@@ -21,10 +21,10 @@ export class UserProxy {
   @ApiProperty()
   public email: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   public role?: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   public imageUrl?: string;
 
   @ApiProperty()

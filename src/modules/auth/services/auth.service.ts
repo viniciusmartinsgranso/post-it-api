@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { UserEntity } from 'src/modules/user/entities/user.entity';
 import { UserService } from 'src/modules/user/services/user.service';
 import * as bcryptjs from 'bcryptjs';
@@ -17,10 +13,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  public async authenticate(
-    email: string,
-    passwordInPlainText: string,
-  ): Promise<UserEntity> {
+  public async authenticate(email: string, passwordInPlainText: string,): Promise<UserEntity> {
     const user = await this.userService.getRepository().findOneBy({ email });
 
     if (!user) throw new BadRequestException('Email ou senha inválidos');

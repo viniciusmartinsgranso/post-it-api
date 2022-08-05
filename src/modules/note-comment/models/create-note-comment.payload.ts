@@ -1,5 +1,5 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsDefined, IsNotEmpty, IsString, Length, MaxLength } from "class-validator";
+import { ApiProperty } from '@nestjs/swagger';
+import { IsDefined, IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
 export class CreateNoteCommentPayload {
 
@@ -8,6 +8,6 @@ export class CreateNoteCommentPayload {
   @IsString({ message: 'O conteúdo do comentário deve ser uma string' })
   @IsNotEmpty({ message: 'O conteúdo do comentário não pode ser vazio' })
   @MaxLength(250, { message: 'O conteúdo do comentário não pode ultrapassar 250 caracteres' })
-  public comment: string;
 
+  public comment: string;
 }

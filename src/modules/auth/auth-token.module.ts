@@ -10,6 +10,8 @@ import { environment } from 'src/environment/environment';
       secret: environment.JWT_KEY,
     }),
   ],
-  exports: [PassportModule, JwtModule],
+  exports: [
+    PassportModule, JwtModule
+  ],
 })
 export class AuthTokenModule {}

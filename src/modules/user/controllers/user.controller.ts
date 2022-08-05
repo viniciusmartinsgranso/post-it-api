@@ -1,7 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from "@nestjs/common";
-import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags } from "@nestjs/swagger";
-import { ProtectTo } from '../../../decorators/protect/protect.decorator';
-import { User } from '../../../decorators/user/user.decorator';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, } from '@nestjs/common';
+import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags, } from '@nestjs/swagger';
+import { ProtectTo } from 'src/decorators/protect/protect.decorator';
+import { User } from 'src/decorators/user/user.decorator';
 import { UserEntity } from '../entities/user.entity';
 import { CreateUserPayload } from '../models/create-user.payload';
 import { UpdateUserPayload } from '../models/update-user.payload';
@@ -11,17 +11,20 @@ import { UserService } from '../services/user.service';
 @Controller('user')
 @ApiTags('user')
 export class UserController {
+
   constructor(
-    private readonly userService: UserService,
+    private readonly userService: UserService
   ) {}
 
   @ProtectTo()
-  @Get('/list')
+  @Get()
   @ApiOperation({ summary: 'Obtém os dados de todos os usuários' })
   @ApiOkResponse({ type: UserProxy, isArray: true })
   @ApiQuery({ name: 'search', description: 'A busca a ser realizada', required: false })
   public getUsers(@Query('search') search: string): Promise<UserProxy[]> {
-    return this.userService.getUsers(search).then(result => result.map(entity => new UserProxy(entity)));
+    return this.userService
+      .getUsers(search)
+      .then((result) => result.map((entity) => new UserProxy(entity)));
   }
 
   @ProtectTo()
@@ -40,9 +43,7 @@ export class UserController {
   @ApiOkResponse({ type: UserProxy })
   @ApiBody({ type: CreateUserPayload, description: 'Os dados a serem cadastrados no usuário' })
   public postUser(@Body() user: CreateUserPayload): Promise<UserProxy> {
-    return this.userService
-      .postUser(user)
-      .then((entity) => new UserProxy(entity));
+    return this.userService.postUser(user).then((entity) => new UserProxy(entity));
   }
 
   @ProtectTo()
@@ -52,14 +53,17 @@ export class UserController {
   @ApiParam({ name: 'userId', description: 'A identificação do usuário' })
   @ApiBody({ type: UpdateUserPayload, description: 'Os dados a serem atualizados do usuário' })
   public putUser(@User() requestUser: UserEntity, @Param('userId') userId: string, @Body() user: UpdateUserPayload): Promise<UserProxy> {
-    return this.userService.putUser(requestUser, userId, user).then(entity => new UserProxy(entity));
+    return this.userService
+      .putUser(requestUser, userId, user)
+      .then((entity) => new UserProxy(entity));
   }
 
+  @ProtectTo()
   @Delete(':userId')
   @ApiOperation({ summary: 'Deleta um usuário' })
   @ApiOkResponse()
   @ApiParam({ name: 'userId', description: 'A identificação do usuário' })
-  public deleteUser(@User() requestUser: UserEntity, @Param('userId') userId: string): void {
-    this.userService.deleteUser(requestUser, userId);
+  public deleteUser(@User() requestUser: UserEntity, @Param('userId') userId: string): Promise<void> {
+    return this.userService.deleteUser(requestUser, userId);
   }
 }

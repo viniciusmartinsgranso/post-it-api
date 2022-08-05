@@ -7,9 +7,17 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
 
 @Module({
-  controllers: [AuthController],
-  imports: [UserModule, AuthTokenModule],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
-  exports: [AuthService],
+  controllers: [
+    AuthController
+  ],
+  imports: [
+    UserModule, AuthTokenModule
+  ],
+  providers: [
+    AuthService, LocalStrategy, JwtStrategy
+  ],
+  exports: [
+    AuthService
+  ],
 })
 export class AuthModule {}

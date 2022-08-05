@@ -1,12 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import {
-  IsDefined,
-  IsEmail,
-  IsOptional,
-  IsString,
-  IsUrl,
-  MinLength,
-} from 'class-validator';
+import { IsDefined, IsEmail, IsOptional, IsString, IsUrl, MinLength, } from 'class-validator';
 
 export class CreateUserPayload {
   @ApiProperty()

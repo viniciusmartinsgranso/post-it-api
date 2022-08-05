@@ -4,6 +4,7 @@ import { UserProxy } from 'src/modules/user/models/user.proxy';
 import { NoteCommentEntity } from '../entities/note-comment.entity';
 
 export class NoteCommentProxy {
+
   constructor(entity: NoteCommentEntity) {
     this.id = entity.id;
     this.comment = entity.comment;

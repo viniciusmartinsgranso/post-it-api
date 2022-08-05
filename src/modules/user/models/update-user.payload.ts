@@ -1,21 +1,21 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsString, IsUrl, MinLength } from 'class-validator';
 
 export class UpdateUserPayload {
   @ApiPropertyOptional()
   @IsOptional()
   @IsString({ message: 'O nome deve ser uma string' })
-  @MinLength(2, { message: 'O nome deve ter no mínimo dois caracteres' })
-  name: string;
+  @MinLength(2, { message: 'O nome deve ser maior ou igual a 2 caracteres' })
+  public name?: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsOptional()
-  @IsString()
+  @IsString({ message: 'O cargo deve ser uma string' })
   public role?: string;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsOptional()
-  @IsString()
-  @IsUrl({}, { message: 'A imagem deve ser uma url' })
+  @IsString({ message: 'A URL da imagem deve ser uma string' })
+  @IsUrl({}, { message: 'A URL deve ser válida' })
   public imageUrl?: string;
 }

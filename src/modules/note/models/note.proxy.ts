@@ -1,7 +1,7 @@
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { NoteCommentProxy } from "src/modules/note-comment/models/note-comment.proxy";
-import { UserProxy } from "src/modules/user/models/user.proxy";
-import { NoteEntity } from "../entities/note.entity";
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { NoteCommentProxy } from 'src/modules/note-comment/models/note-comment.proxy';
+import { UserProxy } from 'src/modules/user/models/user.proxy';
+import { NoteEntity } from '../entities/note.entity';
 
 export class NoteProxy {
 
@@ -13,12 +13,16 @@ export class NoteProxy {
     this.createdAt = entity.createdAt;
     this.updatedAt = entity.updatedAt;
     this.userId = entity.userId;
+    this.hasLiked = false;
 
-    if (entity.user)
-      this.user = new UserProxy(entity.user);
+    if (entity.user) this.user = new UserProxy(entity.user);
 
     if (entity.comments)
-      this.comments = entity.comments.map(comment => new NoteCommentProxy(comment));
+      this.comments = entity.comments.map(
+        (comment) => new NoteCommentProxy(comment),
+      );
+
+    if (entity.likes && entity.likes.length > 0) this.hasLiked = true;
   }
 
   @ApiProperty()
@@ -41,6 +45,9 @@ export class NoteProxy {
 
   @ApiProperty()
   public userId: number;
+
+  @ApiProperty()
+  public hasLiked: boolean;
 
   @ApiPropertyOptional({ type: () => UserProxy })
   public user?: UserProxy;

@@ -12,8 +12,6 @@ import { UserModule } from './modules/user/user.module';
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: environment.DATABASE_URL,
-      // database: 'test.db',
-      entities: [],
       autoLoadEntities: true,
       synchronize: true,
       logging: environment.DATABASE_LOGGING === 'true',
@@ -32,3 +30,5 @@ import { UserModule } from './modules/user/user.module';
   ],
 })
 export class AppModule {}
+
+// database: 'test.db',
