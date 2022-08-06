@@ -25,7 +25,9 @@ export class NoteService {
     });
   }
 
-  public async getPublic(requestUser: UserEntity): Promise<NoteEntity[]> {
+  public async getPublic(requestUser: UserEntity, page: number, posts:number): Promise<NoteEntity[]> {
+    if (posts === null) posts = 5;
+
     return this.repository
       .createQueryBuilder('note')
       .andWhere('note.isPublic = :isPublic', { isPublic: true })
@@ -40,6 +42,8 @@ export class NoteService {
         { userId: requestUser.id },
       )
       .orderBy('note.updatedAt', 'DESC')
+      .skip((page - 1) * posts)
+      .take(posts)
       .getMany();
   }
 

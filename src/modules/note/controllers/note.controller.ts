@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, } from '@nestjs/common';
 import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ProtectTo } from 'src/decorators/protect/protect.decorator';
 import { User } from 'src/decorators/user/user.decorator';
@@ -42,12 +34,12 @@ export class NoteController {
   }
 
   @ProtectTo()
-  @Get('feed')
+  @Get('feed/:page')
   @ApiOperation({ summary: 'Obtém as notas publicas' })
   @ApiOkResponse({ type: NoteProxy, isArray: true })
-  public getPublic(@User() requestUser: UserEntity): Promise<NoteProxy[]> {
+  public getPublic(@User() requestUser: UserEntity, @Param('page') page: string,  @Query('posts') posts: string): Promise<NoteProxy[]> {
     return this.service
-      .getPublic(requestUser)
+      .getPublic(requestUser, +page, +posts)
       .then((result) => result.map((entity) => new NoteProxy(entity)));
   }
 
