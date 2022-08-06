@@ -14,6 +14,9 @@ export class NoteEntity {
   @Column()
   public annotation: string;
 
+  @Column({ nullable: true })
+  public color?: string;
+
   @Column({ default: false })
   public isPublic: boolean;
 

@@ -94,6 +94,7 @@ export class NoteService {
     note.title = payload.title;
     note.annotation = payload.annotation;
     note.userId = requestUser.id;
+    note.color = payload.color;
 
     return await this.repository.save(note);
   }
@@ -111,6 +112,7 @@ export class NoteService {
     note.title = payload.title ?? note.title;
     note.annotation = payload.annotation ?? note.annotation;
     note.isPublic = payload.isPublic ?? note.isPublic;
+    note.color = payload.color ?? note.color;
 
     return await this.repository.save(note);
   }
