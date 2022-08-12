@@ -34,12 +34,12 @@ export class NoteController {
   }
 
   @ProtectTo()
-  @Get('feed/:page')
+  @Get('feed/page/:page')
   @ApiOperation({ summary: 'Obtém as notas publicas' })
   @ApiOkResponse({ type: NoteProxy, isArray: true })
-  public getPublic(@User() requestUser: UserEntity, @Param('page') page: string, @Query('posts') posts: string): Promise<NoteProxy[]> {
+  public getPublic(@User() requestUser: UserEntity, @Param('page') page: string): Promise<NoteProxy[]> {
     return this.service
-      .getPublic(requestUser, +page, +posts)
+      .getPublic(requestUser, +page)
       .then((result) => result.map((entity) => new NoteProxy(entity)));
   }
 

@@ -25,8 +25,10 @@ export class NoteService {
     });
   }
 
-  public async getPublic(requestUser: UserEntity, page: number, posts:number): Promise<NoteEntity[]> {
-    if (posts === null) posts = 5;
+  public async getPublic(requestUser: UserEntity, page: number, posts?:number): Promise<NoteEntity[]> {
+    if (!posts) posts = 5;
+    console.log(posts, 'posts');
+    console.log(page, 'pages');
 
     return this.repository
       .createQueryBuilder('note')
