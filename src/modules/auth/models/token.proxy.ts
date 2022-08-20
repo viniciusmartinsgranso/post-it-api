@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 
 export class TokenProxy {
 
@@ -8,4 +8,5 @@ export class TokenProxy {
 
   @ApiProperty()
   public token: string;
+
 }
