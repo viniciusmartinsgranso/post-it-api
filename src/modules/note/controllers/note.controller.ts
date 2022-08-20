@@ -18,6 +18,7 @@ export class NoteController {
   @ApiOperation({ summary: 'Obtém as notas criadas pelo usuário logado' })
   @ApiOkResponse({ type: NoteProxy, isArray: true })
   public getMe(@User() requestUser: UserEntity): Promise<NoteProxy[]> {
+    console.log({ requestUser });
     return this.service
       .getMe(requestUser)
       .then((result) => result.map((entity) => new NoteProxy(entity)));

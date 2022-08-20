@@ -1,13 +1,13 @@
 import { Module } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
 import { PassportModule } from "@nestjs/passport";
-import { enviroment } from "src/environment/environment";
+import { environment } from "src/environment/environment";
 
 @Module({
   imports: [
     PassportModule,
     JwtModule.register({
-      secret: enviroment.JWT_KEY,
+      secret: environment.JWT_KEY,
     }),
   ],
   exports: [

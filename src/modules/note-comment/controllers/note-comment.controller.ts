@@ -20,6 +20,7 @@ export class NoteCommentController {
   @ApiOperation({ summary: 'Obtém os comentários de uma nota' })
   @ApiOkResponse({ type: NoteCommentProxy, isArray: true })
   public getMany(@User() requestUser: UserEntity, @Param('noteId') noteId: string,): Promise<NoteCommentProxy[]> {
+    console.log(requestUser);
     return this.noteCommentService
       .getMany(requestUser, +noteId)
       .then((result) => result.map((entity) => new NoteCommentProxy(entity)));

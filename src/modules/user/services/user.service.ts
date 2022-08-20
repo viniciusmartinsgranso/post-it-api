@@ -80,4 +80,9 @@ export class UserService {
 
     await this.repository.remove(user);
   }
+
+  public async getMe(requestUser: UserEntity): Promise<UserEntity> {
+    console.log(requestUser);
+    return await this.getUserById(requestUser.id);
+  }
 }

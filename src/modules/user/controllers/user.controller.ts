@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query, } from '@nestjs
 import { ApiBody, ApiOkResponse, ApiOperation, ApiParam, ApiQuery, ApiTags, } from '@nestjs/swagger';
 import { ProtectTo } from 'src/decorators/protect/protect.decorator';
 import { User } from 'src/decorators/user/user.decorator';
-import { UserEntity } from '../entities/user.entity';
+import { UserEntity } from 'src/modules/user/entities/user.entity';
 import { CreateUserPayload } from '../models/create-user.payload';
 import { UpdateUserPayload } from '../models/update-user.payload';
 import { UserProxy } from '../models/user.proxy';
@@ -15,6 +15,17 @@ export class UserController {
   constructor(
     private readonly userService: UserService
   ) {}
+
+  @ProtectTo()
+  @Get('me')
+  @ApiOperation({ summary: 'Retorna as informações do usuário logado' })
+  @ApiOkResponse({ type: UserProxy })
+  public async getMe(@User() requestUser: UserEntity): Promise<UserProxy> {
+    console.log({ requestUser });
+    return this.userService
+      .getMe(requestUser)
+      .then((entity) => new UserProxy(entity));
+  }
 
   @ProtectTo()
   @Get()
@@ -31,7 +42,6 @@ export class UserController {
   @Get(':userId')
   @ApiOperation({ summary: 'Obtém um usuário pela identificação' })
   @ApiOkResponse({ type: UserProxy })
-  @ApiParam({ name: 'userId', description: 'A identificação do usuário' })
   public getOneUser(@Param('userId') userId: string): Promise<UserProxy> {
     return this.userService
       .getUserById(+userId)
